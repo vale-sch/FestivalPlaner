@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="FestivalPlaner.Views.ItemDetailPage"
+             Title="{Binding Title}">
+
+    <StackLayout Spacing="20" Padding="15">
+        <Label Text="Name:" FontSize="Small" />
+        <Label Text="{Binding Name}" FontSize="Large"/>
+        <Label Text="Start:" FontSize="Small" />
+        <Label Text="{Binding StartDate}" FontSize="Large"/>
+        <Label Text="Ende:" FontSize="Small" />
+        <Label Text="{Binding EndDate}" FontSize="Large"/>
+        <Label Text="Standort:" FontSize="Small" />
+        <Label Text="{Binding Place}" FontSize="Large"/>
+        <Label Text="Preis:" FontSize="Small" />
+        <Label Text="{Binding Price}" FontSize="Large"/>
+        <Label Text="Tickets verfügbar:" FontSize="Small" />
+        <Label Text="{Binding TicketCountAvailable}" FontSize="Large"/>
+        <StackLayout Orientation="Horizontal">
+            <Button Text="Delete" Command="{Binding Delete}" HorizontalOptions="FillAndExpand"></Button>
+        </StackLayout>
+    </StackLayout>
+    
+</ContentPage>
