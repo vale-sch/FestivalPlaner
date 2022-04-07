@@ -17,7 +17,8 @@
             <Editor Text="{Binding EndDate, Mode=TwoWay}" AutoSize="TextChanges" FontSize="Medium" Margin="0" />
             <Label Text="Place" FontSize="Medium" />
             <Editor Text="{Binding Place, Mode=TwoWay}" AutoSize="TextChanges" FontSize="Medium" Margin="0" />
-            <Label Text="Price" FontSize="Medium" />
+            <Button Text="Add Location" Clicked="Button_Clicked"></Button>
+            <Label Text="Price" FontSize="Medium" /> 
             <Editor Text="{Binding Price, Mode=TwoWay}" AutoSize="TextChanges" FontSize="Medium" Margin="0" />
             <Label Text="Ticket Count" FontSize="Medium" />
             <Editor Text="{Binding TicketCountAvailable, Mode=TwoWay}" AutoSize="TextChanges" FontSize="Medium" Margin="0" />

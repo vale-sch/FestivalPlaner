@@ -32,7 +32,7 @@
             <StackLayout Orientation="Vertical" Padding="30,24,30,24" Spacing="10">
                 <Label Text="Get your Festival Ticket now" FontSize="32" HorizontalTextAlignment="Center" />
                 <Label Text="The pandemic won't stop us from having fun. You're cordially invited to our virtual festival planer! Let us know what you would improve." FontSize="16" />
-                <Button Text="Show Maps" Clicked="Button_Clicked"/>
+               <!-- <Button Text="Show Maps" Clicked="Button_Clicked"/> -->
             </StackLayout>
         </ScrollView> 
        

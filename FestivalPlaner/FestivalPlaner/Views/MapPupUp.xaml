@@ -16,8 +16,13 @@
     <StackLayout>
         <Label Text="Choose your festival location"></Label>
         <Frame>
-            <maps:Map IsShowingUser="True" HeightRequest="500" WidthRequest="400">
-
+            <maps:Map
+                x:Name="Map"
+                IsShowingUser="True"
+                HeightRequest="500"
+                WidthRequest="400"
+                MapClicked="Map_MapClicked">
+                
             </maps:Map>
         </Frame>
         <Button Text=" Close maps" Clicked="Button_Clicked"/>
