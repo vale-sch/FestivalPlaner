@@ -1,0 +1,25 @@
+﻿<xct:Popup
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:xct="http://xamarin.com/schemas/2020/toolkit" 
+    
+    xmlns:maps="clr-namespace:Xamarin.Forms.Maps;assembly=Xamarin.Forms.Maps" 
+   
+    xmlns:views="clr-namespace:FestivalPlaner.Views" 
+    x:DataType="views:MapPupUp"
+    x:Class="FestivalPlaner.Views.MapPupUp"
+    Size =" 350, 700"
+    
+    >
+    
+    
+    <StackLayout>
+        <Label Text="Choose your festival location"></Label>
+        <Frame>
+            <maps:Map IsShowingUser="True" HeightRequest="500" WidthRequest="400">
+
+            </maps:Map>
+        </Frame>
+        <Button Text=" Close maps" Clicked="Button_Clicked"/>
+    </StackLayout>
+</xct:Popup>
