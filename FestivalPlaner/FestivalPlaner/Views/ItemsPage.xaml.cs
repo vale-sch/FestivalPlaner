@@ -14,7 +14,7 @@ namespace FestivalPlaner.Views
 {
     public partial class ItemsPage : ContentPage
     {
-        readonly ItemsViewModel _viewModel;
+        public static ItemsViewModel _viewModel;
 
         public ItemsPage()
         {

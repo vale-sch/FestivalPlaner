@@ -34,27 +34,17 @@ namespace FestivalPlaner.ViewModels
             try
             {
                 Festivals.Clear();
-                
-              
-                var collection = App.databaseBase.GetCollection<FestivalModel>(App.collectionName);
 
-                var results = await collection.FindAsync(_ => true);
-                foreach (var item in results.ToList())
+                foreach (FestivalModel festivalModel in App.festivals)
                 {
-                    var festivalModel = new FestivalModel
-                    {
-                        _id = item._id,
-                        name = item.name,
-                        startDate = item.startDate,
-                        endDate = item.endDate,
-                        place = item.place,
-                        price = item.price,
-                        ticketCountAvailable = item.ticketCountAvailable
-                    };
-                     Festivals.Add(festivalModel);
-                   await DataStore.AddItemAsync(festivalModel);
+                    
+                    await DataStore.AddItemAsync(festivalModel);
                     await DataStore.UpdateItemAsync(festivalModel);
+                    Festivals.Add(festivalModel);
                 }
+
+               
+                
             }
             catch (Exception ex)
             {

@@ -14,12 +14,13 @@
     
     
     <StackLayout>
-        <Label Text="Choose your festival location"></Label>
+        <Label Text="Set your festival location" HorizontalTextAlignment="Center"  VerticalTextAlignment="Center" FontSize="Large"></Label>
         <Frame>
+            
             <maps:Map
                 x:Name="Map"
                 IsShowingUser="True"
-                HeightRequest="500"
+                HeightRequest="550"
                 WidthRequest="400"
                 MapClicked="Map_MapClicked">
                 

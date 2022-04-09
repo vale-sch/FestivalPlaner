@@ -2,6 +2,7 @@
 using System;
 using Xamarin.Forms;
 using MongoDB.Driver;
+
 namespace FestivalPlaner.ViewModels
 {
     public class NewItemViewModel : BaseViewModel
@@ -10,7 +11,9 @@ namespace FestivalPlaner.ViewModels
         private string name;
         private DateTime startDate = DateTime.UtcNow;
         private DateTime endDate = DateTime.UtcNow;
-        private string place;
+        public static string place = "Add location via Maps";
+        public static double latitude;
+        public static double longitude;
         private double price;
         private int ticketCountAvailable;
  
@@ -29,7 +32,16 @@ namespace FestivalPlaner.ViewModels
               //  && !String.IsNullOrWhiteSpace(description);
         }
 
-       
+       public Double Latitude
+        {
+            get => latitude;
+            set => SetProperty(ref latitude, value);
+        }
+        public Double Longitude
+        {
+            get => longitude;
+            set => SetProperty(ref longitude, value);
+        }
         public string Name
         {
             get => name;
@@ -47,7 +59,7 @@ namespace FestivalPlaner.ViewModels
         }
         public string Place
         {
-            get => Services.GeoLocationService.Latitude.ToString() + "," + Services.GeoLocationService.Longitude.ToString();
+            get => place;
             set => SetProperty(ref place, value);
         }
         public double Price
@@ -71,7 +83,7 @@ namespace FestivalPlaner.ViewModels
             await Shell.Current.GoToAsync("..");
         }
 
-        private async void OnSave()
+        public  async void OnSave()
         {
             FestivalModel newFestival = new FestivalModel()
             {
@@ -80,15 +92,17 @@ namespace FestivalPlaner.ViewModels
                 startDate = StartDate,
                 endDate = EndDate,
                 place = Place,
+                latitude = Latitude,
+                longitude = Longitude,
                 price = Price,
                 ticketCountAvailable = TicketCountAvailable,
             };
             var collection = App.databaseBase.GetCollection<FestivalModel>(App.collectionName);
-
+           
 
             await collection.InsertOneAsync(newFestival);
             await DataStore.AddItemAsync(newFestival);
-
+            App.festivals.Add(newFestival);
             // This will pop the current page off the navigation stack
             await Shell.Current.GoToAsync("..");
         }

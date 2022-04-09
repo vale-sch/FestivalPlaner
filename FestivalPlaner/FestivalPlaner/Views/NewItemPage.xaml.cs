@@ -11,7 +11,6 @@ namespace FestivalPlaner.Views
 {
     public partial class NewItemPage : ContentPage
     {
-        //public FestivalModel Item { get; set; }
 
         public NewItemPage()
         {
@@ -21,10 +20,17 @@ namespace FestivalPlaner.Views
 
         private void Button_Clicked(object sender, EventArgs e)
         {
-            Navigation.ShowPopup(new MapPupUp()
+            Navigation.ShowPopup(new MapPupUp(this)
             {
-                IsLightDismissEnabled = false
+                IsLightDismissEnabled = false,
+                BindingContext = this
             });
+        }
+        public void OnSafe(string place)
+        {
+            Place.Text = place;
+            LocationButton.IsEnabled = false;
+            LocationButton.IsVisible = false;
         }
     }
 }

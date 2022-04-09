@@ -160,4 +160,7 @@
       <SubType>Designer</SubType>
     </AndroidResource>
   </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\colorBlob.png" />
+  </ItemGroup>
 </Project>

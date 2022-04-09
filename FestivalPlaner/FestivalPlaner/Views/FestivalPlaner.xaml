@@ -24,14 +24,14 @@
         <StackLayout BackgroundColor="{StaticResource Accent}" VerticalOptions="FillAndExpand" HorizontalOptions="Fill">
             <StackLayout Orientation="Horizontal" HorizontalOptions="Center" VerticalOptions="Center">
                 <ContentView Padding="0,0,0,0" VerticalOptions="FillAndExpand">
-                   <Image Source="festival.png" VerticalOptions="Center" HeightRequest="400" InputTransparent="True" />
+                   <Image Source="colorBlob.png" VerticalOptions="Center" HeightRequest="400" InputTransparent="True" />
                 </ContentView>
             </StackLayout>
         </StackLayout>
         <ScrollView Grid.Row="1">
             <StackLayout Orientation="Vertical" Padding="30,24,30,24" Spacing="10">
-                <Label Text="Get your Festival Ticket now" FontSize="32" HorizontalTextAlignment="Center" />
-                <Label Text="The pandemic won't stop us from having fun. You're cordially invited to our virtual festival planer! Let us know what you would improve." FontSize="16" />
+                <Label Text="Get your Festival Ticket now" FontSize="40" HorizontalTextAlignment="Center" />
+                <Label Text="The pandemic won't stop us from having fun. You're cordially invited to our virtual festival planer! Let us know what you would improve." FontSize="20" Padding="30,24,30,24"  HorizontalTextAlignment="Center"/>
                <!-- <Button Text="Show Maps" Clicked="Button_Clicked"/> -->
             </StackLayout>
         </ScrollView> 
