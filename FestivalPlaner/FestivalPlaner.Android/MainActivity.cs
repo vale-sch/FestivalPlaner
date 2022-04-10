@@ -1,10 +1,11 @@
 ﻿using System;
-
+using Plugin.LocalNotification;
 using Android.App;
 using Android.Content.PM;
 using Android.Runtime;
 using Android.OS;
 using Android;
+using Android.Content;
 
 namespace FestivalPlaner.Droid
 {
@@ -37,11 +38,17 @@ namespace FestivalPlaner.Droid
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
-
+            NotificationCenter.CreateNotificationChannel();
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
             Xamarin.FormsMaps.Init(this, savedInstanceState);
+            NotificationCenter.NotifyNotificationTapped(Intent);
             LoadApplication(new App());
+        }
+        protected override void OnNewIntent(Intent intent)
+        {
+            NotificationCenter.NotifyNotificationTapped(intent);
+            base.OnNewIntent(intent);
         }
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)
         {

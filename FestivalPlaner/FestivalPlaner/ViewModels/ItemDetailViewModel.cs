@@ -10,7 +10,7 @@ namespace FestivalPlaner.ViewModels
 {
 
     [QueryProperty(nameof(ItemId), nameof(ItemId))]
-  
+
     public class ItemDetailViewModel : BaseViewModel
     {
         private string itemId { get; set; }
@@ -21,13 +21,13 @@ namespace FestivalPlaner.ViewModels
         private double price;
         private int ticketCountAvailable;
 
-       
-     
+
+
         public ItemDetailViewModel()
         {
             Delete = new Command(RemoveFestival);
         }
-    
+
         public string Name
         {
             get => name;
@@ -106,11 +106,12 @@ namespace FestivalPlaner.ViewModels
                     price = item.price,
                     ticketCountAvailable = item.ticketCountAvailable
                 };
-               
+
                 var filterbak = Builders<FestivalModel>.Filter.Eq("_id", festivalToDelete._id);
                 var collection = App.databaseBase.GetCollection<FestivalModel>(App.collectionName);
                 await collection.DeleteOneAsync(filterbak);
                 await DataStore.DeleteItemAsync(festivalToDelete._id);
+                await App.loadFestivalsFromDB();
                 await Shell.Current.GoToAsync("..");
 
             }
@@ -118,7 +119,7 @@ namespace FestivalPlaner.ViewModels
             {
                 Debug.WriteLine("Failed to Remove Item");
             }
-           
+
         }
     }
 }

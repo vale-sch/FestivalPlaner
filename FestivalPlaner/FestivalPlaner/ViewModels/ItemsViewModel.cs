@@ -27,7 +27,7 @@ namespace FestivalPlaner.ViewModels
             AddItemCommand = new Command(OnAddItem);
         }
 
-        async Task ExecuteLoadItemsCommand()
+        public async Task ExecuteLoadItemsCommand()
         {
             IsBusy = true;
 
@@ -37,14 +37,14 @@ namespace FestivalPlaner.ViewModels
 
                 foreach (FestivalModel festivalModel in App.festivals)
                 {
-                    
+
                     await DataStore.AddItemAsync(festivalModel);
                     await DataStore.UpdateItemAsync(festivalModel);
                     Festivals.Add(festivalModel);
                 }
 
-               
-                
+
+
             }
             catch (Exception ex)
             {
@@ -74,6 +74,7 @@ namespace FestivalPlaner.ViewModels
 
         private async void OnAddItem(object obj)
         {
+            NewItemViewModel.place = "Add location via Maps";
             await Shell.Current.GoToAsync(nameof(NewItemPage));
         }
 

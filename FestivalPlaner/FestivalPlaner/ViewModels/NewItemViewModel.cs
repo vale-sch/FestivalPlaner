@@ -7,16 +7,16 @@ namespace FestivalPlaner.ViewModels
 {
     public class NewItemViewModel : BaseViewModel
     {
- 
+
         private string name;
         private DateTime startDate = DateTime.UtcNow;
-        private DateTime endDate = DateTime.UtcNow;
+        private DateTime endDate = DateTime.UtcNow.AddDays(3).AddMinutes(50).AddSeconds(45);
         public static string place = "Add location via Maps";
         public static double latitude;
         public static double longitude;
         private double price;
         private int ticketCountAvailable;
- 
+
         public NewItemViewModel()
         {
             Save = new Command(OnSave, ValidateSave);
@@ -29,10 +29,10 @@ namespace FestivalPlaner.ViewModels
         {
             return true;
             //return !String.IsNullOrWhiteSpace(text)
-              //  && !String.IsNullOrWhiteSpace(description);
+            //  && !String.IsNullOrWhiteSpace(description);
         }
 
-       public Double Latitude
+        public Double Latitude
         {
             get => latitude;
             set => SetProperty(ref latitude, value);
@@ -83,7 +83,7 @@ namespace FestivalPlaner.ViewModels
             await Shell.Current.GoToAsync("..");
         }
 
-        public  async void OnSave()
+        public async void OnSave()
         {
             FestivalModel newFestival = new FestivalModel()
             {
@@ -98,7 +98,7 @@ namespace FestivalPlaner.ViewModels
                 ticketCountAvailable = TicketCountAvailable,
             };
             var collection = App.databaseBase.GetCollection<FestivalModel>(App.collectionName);
-           
+
 
             await collection.InsertOneAsync(newFestival);
             await DataStore.AddItemAsync(newFestival);

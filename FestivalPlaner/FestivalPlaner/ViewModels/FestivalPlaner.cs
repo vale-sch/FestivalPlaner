@@ -10,8 +10,7 @@ namespace FestivalPlaner.ViewModels
         public FestivalPlaner()
         {
             Title = "Festival Planer";
-          
-        }
 
+        }
     }
 }

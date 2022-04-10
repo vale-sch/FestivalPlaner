@@ -24,6 +24,7 @@ namespace FestivalPlaner.Views
             {
                 IsLightDismissEnabled = false,
                 BindingContext = this
+                
             });
         }
         public void OnSafe(string place)

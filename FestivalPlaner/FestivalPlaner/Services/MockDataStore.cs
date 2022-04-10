@@ -12,9 +12,9 @@ namespace FestivalPlaner.Services
         private List<FestivalModel> items = new List<FestivalModel>();
         public MockDataStore()
         {
-         
+
         }
-      
+
         public async Task<bool> AddItemAsync(FestivalModel item)
         {
             items.Add(item);

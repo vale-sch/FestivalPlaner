@@ -1,75 +1,100 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using FestivalPlaner.Models;
+using FestivalPlaner.ViewModels;
+using FestivalPlaner.Views;
+using Plugin.LocalNotification;
 using Xamarin.Essentials;
+using Xamarin.Forms;
 
 namespace FestivalPlaner.Services
 {
 
-    public  class GeoLocationService
+    public class GeoLocationService
     {
-        public  CancellationTokenSource cts;
-        private Location actualLocation;
+        public CancellationTokenSource cts;
+        public static Location actualLocation;
         private bool isGettingLocation = false;
-        public  async Task GetCurrentLocation()
+        private FestivalModel nearFestival;
+        private static List<int> notificationIds = new List<int>();
+        public async Task GetCurrentLocation()
         {
             var permissionWhenUsing = await Permissions.RequestAsync<Permissions.LocationWhenInUse>();
             var permissionAlways = await Permissions.RequestAsync<Permissions.LocationAlways>();
-            
-            if (permissionAlways == PermissionStatus.Granted)
+
+
+            try
             {
-                try
+                while (!isGettingLocation)
                 {
-                    
-                    while (!isGettingLocation)
+                    isGettingLocation = true;
+                    var request = new GeolocationRequest(GeolocationAccuracy.High, TimeSpan.FromSeconds(45));
+                    cts = new CancellationTokenSource();
+                    actualLocation = await Geolocation.GetLocationAsync(request, cts.Token);
+                    await Task.Delay(TimeSpan.FromMinutes(5));
+                    foreach (FestivalModel festivalModel in App.festivals)
                     {
-                        isGettingLocation = true;
-                        var request = new GeolocationRequest(GeolocationAccuracy.High, TimeSpan.FromSeconds(45));
-                        cts = new CancellationTokenSource();
-                        actualLocation = await Geolocation.GetLocationAsync(request, cts.Token);
-                        await Task.Delay(15000);
-                        foreach (FestivalModel festivalModel in App.festivals)
+                        double nearestLocationFestival = Location.CalculateDistance(actualLocation, new Location(festivalModel.latitude, festivalModel.longitude), DistanceUnits.Kilometers);
+                        if (nearestLocationFestival < 50)
                         {
-                            double nearestLocationFestival = Location.CalculateDistance(actualLocation, new Location(festivalModel.latitude, festivalModel.longitude), DistanceUnits.Kilometers);
-                            Console.WriteLine("Distance: " + nearestLocationFestival);
-                            if (nearestLocationFestival < 50)
-                                await App.Current.MainPage.DisplayAlert("We have find a near Festival at your location!", festivalModel.name + "\n" + festivalModel.place + "\n"+ "Entfernung: " + nearestLocationFestival + " km", "OKAY GEIL");
+                            nearFestival = festivalModel;
+
+                            notificationIds.Add((int)festivalModel.latitude + (int)festivalModel.longitude);
+                            var notification = new NotificationRequest
+                            {
+
+                                BadgeNumber = (int)festivalModel.latitude + (int)festivalModel.longitude,
+                                Title = "We have find a near Festival at your location!" + festivalModel.name + "\n",
+                                Description = festivalModel.place + "\n" + "Entfernung: " + nearestLocationFestival + " km",
+                                NotificationId = (int)festivalModel.latitude + (int)festivalModel.longitude
+
+                            };
+                            await NotificationCenter.Current.Show(notification);
+                            //NotificationCenter.Current.NotificationReceived += Current_NotificationReceived;
+                            NotificationCenter.Current.NotificationTapped += Current_NotificationTapped;
                         }
-                        await Task.Delay(15000);
-                        isGettingLocation = false;
                     }
-                   
+                    await Task.Delay(TimeSpan.FromMinutes(5));
+                    isGettingLocation = false;
                 }
-                catch (FeatureNotSupportedException fnsEx)
-                {
-                    Console.WriteLine(fnsEx.Message);
-                    // Handle not supported on device exception
-                }
-                catch (FeatureNotEnabledException fneEx)
-                {
-                    Console.WriteLine(fneEx.Message);
-                    // Handle not enabled on device exception
-                }
-                catch (PermissionException pEx)
-                {
-                    Console.WriteLine(pEx.Message);
-                    // Handle permission exception
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.Message);
-                    // Unable to get location
-                }
+
             }
-            else
+            catch (FeatureNotSupportedException fnsEx)
             {
-                Console.WriteLine("NOT GRANTED");
+                await App.Current.MainPage.DisplayAlert("Handle not supported on device exception.", fnsEx.Message, "OK");
             }
-               
+            catch (FeatureNotEnabledException fneEx)
+            {
+                await App.Current.MainPage.DisplayAlert("Handle not enabled on device exception.", fneEx.Message, "OK");
+            }
+            catch (PermissionException pEx)
+            {
+                await App.Current.MainPage.DisplayAlert("Handle permission exception.", pEx.Message, "OK");
+            }
+            catch (Exception ex)
+            {
+                await App.Current.MainPage.DisplayAlert("Unable to get location.", ex.Message, "OK");
+            }
         }
 
-        private  void OnDisappearing()
+        private async void Current_NotificationTapped(Plugin.LocalNotification.EventArgs.NotificationEventArgs e)
+        {
+            await new ItemsViewModel().ExecuteLoadItemsCommand();
+            await Shell.Current.GoToAsync($"{nameof(ItemDetailPage)}?{nameof(ItemDetailViewModel.ItemId)}={nearFestival._id}");
+
+        }
+        /* private void Current_NotificationReceived(Plugin.LocalNotification.EventArgs.NotificationEventArgs e)
+         {
+             Device.BeginInvokeOnMainThread(() =>
+             {
+                 App.Current.MainPage.DisplayAlert(e.ToString(), e.ToString(), "OK");
+
+             });
+
+         }*/
+        private void OnDisappearing()
         {
             if (cts != null && !cts.IsCancellationRequested)
                 cts.Cancel();

@@ -1,4 +1,5 @@
 ﻿using FestivalPlaner.Models;
+using FestivalPlaner.Services;
 using FestivalPlaner.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -17,12 +18,13 @@ namespace FestivalPlaner.Views
     {
         private NewItemPage newItemPage;
         private Pin pin;
-        public MapPupUp(NewItemPage _newItemPage)
+         public  MapPupUp(NewItemPage _newItemPage)
         {
             InitializeComponent();
             newItemPage = _newItemPage;
-        }
+            Map.MoveToRegion(MapSpan.FromCenterAndRadius(new Position(GeoLocationService.actualLocation.Latitude, GeoLocationService.actualLocation.Longitude), Distance.FromMeters(1)));
 
+        }
         private void Button_Clicked(object sender, EventArgs e)
         {
             Dismiss(null);
