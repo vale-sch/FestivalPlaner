@@ -12,54 +12,66 @@ using Xamarin.Forms;
 namespace FestivalPlaner.Services
 {
 
-    public class GeoLocationService
+    public static class GeoLocationService
     {
-        public CancellationTokenSource cts;
+        public static int notificationIncrement = 0;
+        public static ItemsViewModel viewModel = new ItemsViewModel();
+        public static List<NotificationFestival> nearFestivals = new List<NotificationFestival>();
+
+        public static CancellationTokenSource cts;
         public static Location actualLocation;
-        private bool isGettingLocation = false;
-        private FestivalModel nearFestival;
-        private static List<int> notificationIds = new List<int>();
-        public async Task GetCurrentLocation()
+        private static bool isCheckingLocation = false;
+        public static bool newNearFestival = false;
+        public static async Task GetCurrentLocation()
         {
+
             var permissionWhenUsing = await Permissions.RequestAsync<Permissions.LocationWhenInUse>();
+
+            if(permissionWhenUsing == PermissionStatus.Denied)
+            {
+                await GetCurrentLocation();
+                return;
+            }
             var permissionAlways = await Permissions.RequestAsync<Permissions.LocationAlways>();
 
 
             try
             {
-                while (!isGettingLocation)
+                while (!isCheckingLocation)
                 {
-                    isGettingLocation = true;
+                    isCheckingLocation = true;
                     var request = new GeolocationRequest(GeolocationAccuracy.High, TimeSpan.FromSeconds(45));
                     cts = new CancellationTokenSource();
                     actualLocation = await Geolocation.GetLocationAsync(request, cts.Token);
-                    await Task.Delay(TimeSpan.FromMinutes(5));
+                    await Task.Delay(TimeSpan.FromMinutes(1));
                     foreach (FestivalModel festivalModel in App.festivals)
                     {
                         double nearestLocationFestival = Location.CalculateDistance(actualLocation, new Location(festivalModel.latitude, festivalModel.longitude), DistanceUnits.Kilometers);
-                        if (nearestLocationFestival < 50)
+                        if (nearestLocationFestival < 5)
                         {
-                            nearFestival = festivalModel;
-
-                            notificationIds.Add((int)festivalModel.latitude + (int)festivalModel.longitude);
-                            var notification = new NotificationRequest
+                            newNearFestival = true;
+                            foreach (NotificationFestival nearFestival in nearFestivals.ToArray())
+                                if (nearFestival.Festival == festivalModel) newNearFestival = false;
+                            if (newNearFestival)
                             {
-
-                                BadgeNumber = (int)festivalModel.latitude + (int)festivalModel.longitude,
-                                Title = "We have find a near Festival at your location!" + festivalModel.name + "\n",
-                                Description = festivalModel.place + "\n" + "Entfernung: " + nearestLocationFestival + " km",
-                                NotificationId = (int)festivalModel.latitude + (int)festivalModel.longitude
-
-                            };
-                            await NotificationCenter.Current.Show(notification);
-                            //NotificationCenter.Current.NotificationReceived += Current_NotificationReceived;
-                            NotificationCenter.Current.NotificationTapped += Current_NotificationTapped;
+                                var rndVerficationNumber = new Random().Next();
+                                notificationIncrement++;                              
+                                var notification = new NotificationRequest
+                                {
+                                    BadgeNumber = notificationIncrement,
+                                    Title = "Festival at your location!",
+                                    Subtitle = festivalModel.name + "\n" + festivalModel.place,
+                                    Description = "Entfernung: " + nearestLocationFestival + " km",
+                                    NotificationId = rndVerficationNumber
+                                };
+                                var tempNearFestival = new NotificationFestival(festivalModel, notification);
+                                nearFestivals.Add(tempNearFestival);
+                                await Task.Delay(TimeSpan.FromSeconds(10));
+                            }
                         }
                     }
-                    await Task.Delay(TimeSpan.FromMinutes(5));
-                    isGettingLocation = false;
+                    isCheckingLocation = false;
                 }
-
             }
             catch (FeatureNotSupportedException fnsEx)
             {
@@ -78,23 +90,7 @@ namespace FestivalPlaner.Services
                 await App.Current.MainPage.DisplayAlert("Unable to get location.", ex.Message, "OK");
             }
         }
-
-        private async void Current_NotificationTapped(Plugin.LocalNotification.EventArgs.NotificationEventArgs e)
-        {
-            await new ItemsViewModel().ExecuteLoadItemsCommand();
-            await Shell.Current.GoToAsync($"{nameof(ItemDetailPage)}?{nameof(ItemDetailViewModel.ItemId)}={nearFestival._id}");
-
-        }
-        /* private void Current_NotificationReceived(Plugin.LocalNotification.EventArgs.NotificationEventArgs e)
-         {
-             Device.BeginInvokeOnMainThread(() =>
-             {
-                 App.Current.MainPage.DisplayAlert(e.ToString(), e.ToString(), "OK");
-
-             });
-
-         }*/
-        private void OnDisappearing()
+        private static void OnDisappearing()
         {
             if (cts != null && !cts.IsCancellationRequested)
                 cts.Cancel();

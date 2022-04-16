@@ -19,12 +19,13 @@ namespace FestivalPlaner
         public static MongoClient client;
         public static IMongoDatabase databaseBase;
         public static List<FestivalModel> festivals = new List<FestivalModel>();
-
+        
         public App()
         {
             InitializeComponent();
 
             MainPage = new AppShell();
+            
         }
 
         async protected override void OnStart()
@@ -33,10 +34,9 @@ namespace FestivalPlaner
             client = new MongoClient(App.connectionString);
             databaseBase = client.GetDatabase(App.databaseName);
             DependencyService.Register<MockDataStore>();
-            GeoLocationService geoLocationService = new GeoLocationService();
-            await loadFestivalsFromDB();
-            await  geoLocationService.GetCurrentLocation();
             
+            await loadFestivalsFromDB();
+            await GeoLocationService.GetCurrentLocation();
         }
         public static async Task loadFestivalsFromDB()
         {

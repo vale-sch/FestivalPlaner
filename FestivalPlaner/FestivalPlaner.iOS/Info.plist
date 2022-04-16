@@ -37,6 +37,7 @@
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>location</string>
+		<string>fetch</string>
 		<string>remote-notification</string>
 	</array>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
@@ -47,5 +48,7 @@
 	<string>We need your location to show you near festivals</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>We need your location to show you near festivals</string>
+	<key>UIMainStoryboardFile</key>
+	<string>LaunchScreen</string>
 </dict>
 </plist>

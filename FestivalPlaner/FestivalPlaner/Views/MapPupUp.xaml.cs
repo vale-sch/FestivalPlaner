@@ -22,7 +22,7 @@ namespace FestivalPlaner.Views
         {
             InitializeComponent();
             newItemPage = _newItemPage;
-            Map.MoveToRegion(MapSpan.FromCenterAndRadius(new Position(GeoLocationService.actualLocation.Latitude, GeoLocationService.actualLocation.Longitude), Distance.FromMeters(1)));
+            Map.MoveToRegion(MapSpan.FromCenterAndRadius(new Position(GeoLocationService.actualLocation.Latitude, GeoLocationService.actualLocation.Longitude), Distance.FromKilometers(1)));
 
         }
         private void Button_Clicked(object sender, EventArgs e)
