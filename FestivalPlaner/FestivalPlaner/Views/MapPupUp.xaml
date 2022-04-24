@@ -19,11 +19,10 @@
             
             <maps:Map
                 x:Name="Map"
-                IsShowingUser="True"
                 HeightRequest="550"
                 WidthRequest="400"
                 MapClicked="Map_MapClicked">
-                
+                <!--IsShowingUser="True"-->
             </maps:Map>
         </Frame>
         <Button Text=" Close maps" Clicked="Button_Clicked"/>

@@ -8,6 +8,7 @@ using FestivalPlaner.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using FestivalPlaner.ViewModels;
+using Xamarin.Essentials;
 
 namespace FestivalPlaner
 {
@@ -25,20 +26,25 @@ namespace FestivalPlaner
             InitializeComponent();
 
             MainPage = new AppShell();
-            
+
+
         }
 
         async protected override void OnStart()
         {
 
+            await Permissions.RequestAsync<Permissions.LocationWhenInUse>();
+
+            await Permissions.RequestAsync<Permissions.LocationAlways>();
+
             client = new MongoClient(App.connectionString);
             databaseBase = client.GetDatabase(App.databaseName);
             DependencyService.Register<MockDataStore>();
             
-            await loadFestivalsFromDB();
+            await LoadFestivalsFromDB();
             await GeoLocationService.GetCurrentLocation();
         }
-        public static async Task loadFestivalsFromDB()
+        public static async Task LoadFestivalsFromDB()
         {
             festivals.Clear();
 

@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Xamarin.CommunityToolkit.UI.Views;
 using Xamarin.Essentials;
@@ -16,14 +17,23 @@ namespace FestivalPlaner.Views
 {
     public partial class MapPupUp : Popup
     {
-        private NewItemPage newItemPage;
+        readonly NewItemPage newItemPage;
         private Pin pin;
          public  MapPupUp(NewItemPage _newItemPage)
         {
             InitializeComponent();
             newItemPage = _newItemPage;
-            Map.MoveToRegion(MapSpan.FromCenterAndRadius(new Position(GeoLocationService.actualLocation.Latitude, GeoLocationService.actualLocation.Longitude), Distance.FromKilometers(1)));
+            var request = new GeolocationRequest(GeolocationAccuracy.High, TimeSpan.FromSeconds(45));
+            var cts = new CancellationTokenSource();
+            Task.Run(async () => await GetLocationAsync(request, cts.Token));
+        }
 
+        private async Task GetLocationAsync(GeolocationRequest request, CancellationToken cancellationToken)
+        {
+            Console.WriteLine("JOJOJOJOJO ");
+            var location = await Geolocation.GetLocationAsync(request, cancellationToken);
+            Console.WriteLine("JOJOJOJOJO " + location);
+            Map.MoveToRegion(MapSpan.FromCenterAndRadius(new Position(location.Latitude, location.Longitude), Distance.FromKilometers(1)));
         }
         private void Button_Clicked(object sender, EventArgs e)
         {
@@ -33,8 +43,9 @@ namespace FestivalPlaner.Views
 
         }
 
-        private async void Map_MapClicked(object sender, MapClickedEventArgs e)
+        public async void Map_MapClicked( object sernder, MapClickedEventArgs e)
         {
+           
             try
             {
                 Map.Pins.Clear();

@@ -111,7 +111,7 @@ namespace FestivalPlaner.ViewModels
                 var collection = App.databaseBase.GetCollection<FestivalModel>(App.collectionName);
                 await collection.DeleteOneAsync(filterbak);
                 await DataStore.DeleteItemAsync(festivalToDelete._id);
-                await App.loadFestivalsFromDB();
+                await App.LoadFestivalsFromDB();
                 await Shell.Current.GoToAsync("..");
 
             }

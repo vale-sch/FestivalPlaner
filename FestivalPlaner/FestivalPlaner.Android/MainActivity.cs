@@ -6,6 +6,9 @@ using Android.Runtime;
 using Android.OS;
 using Android;
 using Android.Content;
+using FestivalPlaner.Droid.Services;
+using Xamarin.Forms;
+using FestivalPlaner.Messages;
 
 namespace FestivalPlaner.Droid
 {
@@ -18,6 +21,8 @@ namespace FestivalPlaner.Droid
             Manifest.Permission.AccessCoarseLocation,
             Manifest.Permission.AccessFineLocation
         };
+        Intent serviceIntent;
+        private const int RequestCode = 5469;
         protected override void OnStart()
         {
             base.OnStart();
@@ -37,12 +42,17 @@ namespace FestivalPlaner.Droid
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
+            TabLayoutResource = Resource.Layout.Tabbar;
+            ToolbarResource = Resource.Layout.Toolbar;
+
             base.OnCreate(savedInstanceState);
             NotificationCenter.CreateNotificationChannel();
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
             Xamarin.FormsMaps.Init(this, savedInstanceState);
             NotificationCenter.NotifyNotificationTapped(Intent);
+            serviceIntent = new Intent(this, typeof(AndroidLocationService));
+            SetServiceMethods();
             LoadApplication(new App());
         }
         protected override void OnNewIntent(Intent intent)
@@ -72,6 +82,43 @@ namespace FestivalPlaner.Droid
             
 
             base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+
+        [Obsolete]
+        void SetServiceMethods()
+        {
+            MessagingCenter.Subscribe<StartServiceMessage>(this, "ServiceStarted", message => {
+                if (!IsServiceRunning(typeof(AndroidLocationService)))
+                {
+                    if (Android.OS.Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.O)
+                    {
+                        StartForegroundService(serviceIntent);
+                    }
+                    else
+                    {
+                        StartService(serviceIntent);
+                    }
+                }
+            });
+
+            MessagingCenter.Subscribe<StopServiceMessage>(this, "ServiceStopped", message => {
+                if (IsServiceRunning(typeof(AndroidLocationService)))
+                    StopService(serviceIntent);
+            });
+        }
+
+        [Obsolete]
+        private bool IsServiceRunning(System.Type cls)
+        {
+            ActivityManager manager = (ActivityManager)GetSystemService(Context.ActivityService);
+            foreach (var service in manager.GetRunningServices(int.MaxValue))
+            {
+                if (service.Service.ClassName.Equals(Java.Lang.Class.FromType(cls).CanonicalName))
+                {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }
