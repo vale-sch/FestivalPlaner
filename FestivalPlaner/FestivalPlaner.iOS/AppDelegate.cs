@@ -40,7 +40,7 @@ namespace FestivalPlaner.iOS
             {
                 locMgr.AllowsBackgroundLocationUpdates = true;
             }
-
+            Xamarin.FormsMaps.Init();
             return base.FinishedLaunching(app, options);
         }
 
@@ -57,18 +57,6 @@ namespace FestivalPlaner.iOS
                 if (locationService.isStarted)
                     locationService.Stop();
             });
-        }
-
-        public override void PerformFetch(UIApplication application, Action<UIBackgroundFetchResult> completionHandler)
-        {
-            try
-            {
-                completionHandler(UIBackgroundFetchResult.NewData);
-            }
-            catch (Exception)
-            {
-                completionHandler(UIBackgroundFetchResult.NoData);
-            }
         }
     }
 }

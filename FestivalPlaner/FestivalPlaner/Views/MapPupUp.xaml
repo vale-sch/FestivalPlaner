@@ -21,8 +21,8 @@
                 x:Name="Map"
                 HeightRequest="550"
                 WidthRequest="400"
-                MapClicked="Map_MapClicked">
-                <!--IsShowingUser="True"-->
+                MapClicked="Map_MapClicked"
+                IsShowingUser="True">
             </maps:Map>
         </Frame>
         <Button Text=" Close maps" Clicked="Button_Clicked"/>

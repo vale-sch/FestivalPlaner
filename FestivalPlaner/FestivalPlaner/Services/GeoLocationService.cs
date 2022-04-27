@@ -31,7 +31,7 @@ namespace FestivalPlaner.Services
                     token.ThrowIfCancellationRequested();
                     try
                     {
-                        await Task.Delay(TimeSpan.FromHours(1));
+                        await Task.Delay(TimeSpan.FromMinutes(1));
                         await GeoLocationService.GetCurrentLocation();
                         if (GeoLocationService.actualLocation != null)
                         {

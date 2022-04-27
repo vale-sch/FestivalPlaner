@@ -23,18 +23,11 @@ namespace FestivalPlaner.Views
         {
             InitializeComponent();
             newItemPage = _newItemPage;
-            var request = new GeolocationRequest(GeolocationAccuracy.High, TimeSpan.FromSeconds(45));
-            var cts = new CancellationTokenSource();
-            Task.Run(async () => await GetLocationAsync(request, cts.Token));
+
+            Map.MoveToRegion(MapSpan.FromCenterAndRadius(new Position(GeoLocationService.actualLocation.Latitude, GeoLocationService.actualLocation.Longitude), Distance.FromKilometers(1)));
         }
 
-        private async Task GetLocationAsync(GeolocationRequest request, CancellationToken cancellationToken)
-        {
-            Console.WriteLine("JOJOJOJOJO ");
-            var location = await Geolocation.GetLocationAsync(request, cancellationToken);
-            Console.WriteLine("JOJOJOJOJO " + location);
-            Map.MoveToRegion(MapSpan.FromCenterAndRadius(new Position(location.Latitude, location.Longitude), Distance.FromKilometers(1)));
-        }
+
         private void Button_Clicked(object sender, EventArgs e)
         {
             Dismiss(null);

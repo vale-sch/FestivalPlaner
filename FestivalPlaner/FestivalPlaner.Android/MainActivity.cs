@@ -42,17 +42,16 @@ namespace FestivalPlaner.Droid
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
-            TabLayoutResource = Resource.Layout.Tabbar;
-            ToolbarResource = Resource.Layout.Toolbar;
-
             base.OnCreate(savedInstanceState);
             NotificationCenter.CreateNotificationChannel();
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
-            Xamarin.FormsMaps.Init(this, savedInstanceState);
-            NotificationCenter.NotifyNotificationTapped(Intent);
+
             serviceIntent = new Intent(this, typeof(AndroidLocationService));
             SetServiceMethods();
+
+            Xamarin.FormsMaps.Init(this, savedInstanceState);
+            NotificationCenter.NotifyNotificationTapped(Intent);
             LoadApplication(new App());
         }
         protected override void OnNewIntent(Intent intent)
@@ -83,9 +82,7 @@ namespace FestivalPlaner.Droid
 
             base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
         }
-
-        [Obsolete]
-        void SetServiceMethods()
+          void SetServiceMethods()
         {
             MessagingCenter.Subscribe<StartServiceMessage>(this, "ServiceStarted", message => {
                 if (!IsServiceRunning(typeof(AndroidLocationService)))
@@ -107,7 +104,6 @@ namespace FestivalPlaner.Droid
             });
         }
 
-        [Obsolete]
         private bool IsServiceRunning(System.Type cls)
         {
             ActivityManager manager = (ActivityManager)GetSystemService(Context.ActivityService);

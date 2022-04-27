@@ -12,12 +12,5 @@ namespace FestivalPlaner.Views
         {
             InitializeComponent();
         }
-
-       /* private void Button_Clicked(object sender, EventArgs e)
-        {
-            Navigation.ShowPopup(new MapPupUp(){
-                IsLightDismissEnabled = false
-            });
-        }*/
     }
 }
