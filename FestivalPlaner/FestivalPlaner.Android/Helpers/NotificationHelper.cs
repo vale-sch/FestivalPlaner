@@ -30,7 +30,7 @@ namespace FestivalPlaner.Droid.Helpers
 
             if (global::Android.OS.Build.VERSION.SdkInt >= BuildVersionCodes.O)
             {
-                NotificationChannel notificationChannel = new NotificationChannel(foregroundChannelId, "Title", NotificationImportance.High);
+                NotificationChannel notificationChannel = new NotificationChannel(foregroundChannelId, "Festival Planer", NotificationImportance.High);
                 notificationChannel.Importance = NotificationImportance.High;
                 notificationChannel.EnableLights(true);
                 notificationChannel.EnableVibration(true);

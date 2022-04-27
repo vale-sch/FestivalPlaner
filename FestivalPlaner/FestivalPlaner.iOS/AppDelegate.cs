@@ -26,6 +26,7 @@ namespace FestivalPlaner.iOS
         {
             locationService = new IOsLocationService();
             SetServiceMethods();
+            _ = AppEvent.Start();
             global::Xamarin.Forms.Forms.Init();
             LoadApplication(new App());
             UIApplication.SharedApplication.SetMinimumBackgroundFetchInterval(UIApplication.BackgroundFetchIntervalMinimum);
@@ -46,6 +47,7 @@ namespace FestivalPlaner.iOS
 
         void SetServiceMethods()
         {
+
             MessagingCenter.Subscribe<StartServiceMessage>(this, "ServiceStarted", async message =>
             {
                 if (!locationService.isStarted)

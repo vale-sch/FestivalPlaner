@@ -52,5 +52,7 @@
 	<string>LaunchScreen</string>
 	<key>CFBundleShortVersionString</key>
 	<string>1.0</string>
+	<key>NSCalendarsUsageDescription</key>
+	<string>We need access to your Calender.</string>
 </dict>
 </plist>

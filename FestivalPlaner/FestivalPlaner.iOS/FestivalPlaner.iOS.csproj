@@ -63,6 +63,7 @@
     <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="AppEvent.cs" />
     <Compile Include="LocationConsent.cs" />
     <Compile Include="LocationManager.cs" />
     <Compile Include="Main.cs" />

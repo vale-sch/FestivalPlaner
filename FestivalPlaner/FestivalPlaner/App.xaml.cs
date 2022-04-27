@@ -20,7 +20,7 @@ namespace FestivalPlaner
         public static MongoClient client;
         public static IMongoDatabase databaseBase;
         public static List<FestivalModel> festivals = new List<FestivalModel>();
-        
+
         public App()
         {
             InitializeComponent();
@@ -30,17 +30,20 @@ namespace FestivalPlaner
 
         }
 
+
+
+
+
         async protected override void OnStart()
         {
 
             await Permissions.RequestAsync<Permissions.LocationWhenInUse>();
 
             await Permissions.RequestAsync<Permissions.LocationAlways>();
-
             client = new MongoClient(App.connectionString);
             databaseBase = client.GetDatabase(App.databaseName);
             DependencyService.Register<MockDataStore>();
-            
+
             await LoadFestivalsFromDB();
             await GeoLocationService.GetCurrentLocation();
         }
