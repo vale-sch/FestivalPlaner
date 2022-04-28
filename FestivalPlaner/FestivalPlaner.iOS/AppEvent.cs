@@ -14,9 +14,9 @@ namespace FestivalPlaner.iOS
 
         public static AppEvent CurrentEvent
         {
-            get { return currentEvent; }
+            get { return Current; }
         }
-        private static AppEvent currentEvent;
+        private static AppEvent Current;
 
         public EKEventStore EventStore
         {
@@ -26,7 +26,7 @@ namespace FestivalPlaner.iOS
 
         static AppEvent()
         {
-            currentEvent = new AppEvent();
+            Current = new AppEvent();
         }
         protected AppEvent()
         {
@@ -35,7 +35,7 @@ namespace FestivalPlaner.iOS
         public static async Task Start()
         {
             await Task.Delay(TimeSpan.FromSeconds(5));
-            AppEvent.currentEvent.EventStore.RequestAccess(EKEntityType.Event,
+            AppEvent.CurrentEvent.EventStore.RequestAccess(EKEntityType.Event,
     (bool granted, NSError e) =>
     {
         if (granted)
