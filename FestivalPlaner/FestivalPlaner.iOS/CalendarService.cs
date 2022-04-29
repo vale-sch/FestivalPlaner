@@ -12,19 +12,13 @@ namespace FestivalPlaner.iOS
 {
     public class CalendarService
     {
-        private EKEventStore eventStore;
+        private EKEventStore eventStore = AppEvent.CurrentEvent.EventStore;
         private CreateEventEditViewDelegate createEventEditViewDelegate;
         private EKCalendar eKCalendar = null;
         private static UIViewController viewController;
         public CalendarService()
         {
             CreateEvent();
-            eventStore =AppEvent.CurrentEvent.EventStore;
-            Device.BeginInvokeOnMainThread(() =>
-            {
-                viewController = new UIViewController();
-            });
-            
         }
     
         void CreateEvent()
@@ -38,17 +32,37 @@ namespace FestivalPlaner.iOS
                     eKCalendar = calendar;
                 }
             }
-            EventKitUI.EKEventEditViewController eventController = new EventKitUI.EKEventEditViewController();
+            Device.BeginInvokeOnMainThread(() =>
+            {
 
-            // set the controller's event store - it needs to know where/how to save the event
-            eventController.EventStore = eventStore;
+                EventKitUI.EKEventEditViewController eventController = new EventKitUI.EKEventEditViewController();
 
-            // wire up a delegate to handle events from the controller
-            createEventEditViewDelegate = new CreateEventEditViewDelegate(eventController);
-            eventController.EditViewDelegate = createEventEditViewDelegate;
+                // set the controller's event store - it needs to know where/how to save the event
+                eventController.EventStore = eventStore;
 
-            // show the event controller
-            viewController.PresentViewController(eventController, true, null);
+                // wire up a delegate to handle events from the controller
+                createEventEditViewDelegate = new CreateEventEditViewDelegate(eventController);
+                eventController.EditViewDelegate = createEventEditViewDelegate;
+
+                // show the event controller
+                viewController = new UIViewController();
+                viewController.PresentViewController(eventController, true, null);
+
+                EKEvent newEvent = EKEvent.FromStore(eventStore);
+                // set the alarm for 10 minutes from now
+                newEvent.AddAlarm(EKAlarm.FromDate((NSDate)DateTime.Now.AddMinutes(10)));
+                // make the event start 20 minutes from now and last 30 minutes
+                newEvent.StartDate = (NSDate)DateTime.Now.AddMinutes(20);
+                newEvent.EndDate = (NSDate)DateTime.Now.AddMinutes(50);
+                newEvent.Title = "Get outside and do some exercise!";
+                newEvent.Notes = "This is your motivational event to go and do 30 minutes of exercise. Super important. Do this.";
+
+                newEvent.Calendar = eKCalendar;
+                
+                NSError e;
+                eventStore.SaveEvent(newEvent, EKSpan.ThisEvent, out e);
+            });
+           
         }
 
     }
