@@ -6,18 +6,25 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UIKit;
+using Xamarin.Forms;
 
 namespace FestivalPlaner.iOS
 {
     public class CalendarService
     {
-        private EKEventStore eventStore = AppEvent.CurrentEvent.EventStore;
+        private EKEventStore eventStore;
         private CreateEventEditViewDelegate createEventEditViewDelegate;
         private EKCalendar eKCalendar = null;
-        private static UIViewController viewController = new UIViewController();
+        private static UIViewController viewController;
         public CalendarService()
         {
             CreateEvent();
+            eventStore =AppEvent.CurrentEvent.EventStore;
+            Device.BeginInvokeOnMainThread(() =>
+            {
+                viewController = new UIViewController();
+            });
+            
         }
     
         void CreateEvent()
@@ -31,8 +38,7 @@ namespace FestivalPlaner.iOS
                     eKCalendar = calendar;
                 }
             }
-            EventKitUI.EKEventEditViewController eventController =
-           new EventKitUI.EKEventEditViewController();
+            EventKitUI.EKEventEditViewController eventController = new EventKitUI.EKEventEditViewController();
 
             // set the controller's event store - it needs to know where/how to save the event
             eventController.EventStore = eventStore;
