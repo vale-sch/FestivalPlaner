@@ -17,7 +17,7 @@ namespace FestivalPlaner.iOS
 		public async Task Start()
 		{
 			_cts = new CancellationTokenSource();
-			_taskId = UIApplication.SharedApplication.BeginBackgroundTask("com.com.Festival", OnExpiration);
+			_taskId = UIApplication.SharedApplication.BeginBackgroundTask("com.company.Festival", OnExpiration);
 
 			try
 			{

@@ -59,6 +59,10 @@ namespace FestivalPlaner.iOS
                 if (locationService.isStarted)
                     locationService.Stop();
             });
+            MessagingCenter.Subscribe<CalendarMessage>(this, "CreateCalender",  message =>
+            {
+                new CalendarService(message.startTime, message.endTime, message.title, message.description);
+            });
         }
     }
 }

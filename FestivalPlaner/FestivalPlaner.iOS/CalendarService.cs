@@ -16,8 +16,15 @@ namespace FestivalPlaner.iOS
         private CreateEventEditViewDelegate createEventEditViewDelegate;
         private EKCalendar eKCalendar = null;
         private static UIViewController viewController;
-        public CalendarService()
+        public  EKEvent newEvent;
+        public CalendarService(DateTime _startTime, DateTime _endTime, string _title, string _description)
         {
+            newEvent.AddAlarm(EKAlarm.FromDate((NSDate)(_startTime - TimeSpan.FromDays(2))));
+            // make the event start 20 minutes from now and last 30 minutes
+            newEvent.StartDate = (NSDate)_startTime;
+            newEvent.EndDate = (NSDate)_endTime;
+            newEvent.Title = _title;
+            newEvent.Notes = _description;
             CreateEvent();
         }
     
@@ -37,25 +44,16 @@ namespace FestivalPlaner.iOS
 
                 EventKitUI.EKEventEditViewController eventController = new EventKitUI.EKEventEditViewController();
 
-                // set the controller's event store - it needs to know where/how to save the event
                 eventController.EventStore = eventStore;
 
-                // wire up a delegate to handle events from the controller
                 createEventEditViewDelegate = new CreateEventEditViewDelegate(eventController);
                 eventController.EditViewDelegate = createEventEditViewDelegate;
 
-                // show the event controller
                 viewController = new UIViewController();
                 viewController.PresentViewController(eventController, true, null);
 
-                EKEvent newEvent = EKEvent.FromStore(eventStore);
-                // set the alarm for 10 minutes from now
-                newEvent.AddAlarm(EKAlarm.FromDate((NSDate)DateTime.Now.AddMinutes(10)));
-                // make the event start 20 minutes from now and last 30 minutes
-                newEvent.StartDate = (NSDate)DateTime.Now.AddMinutes(20);
-                newEvent.EndDate = (NSDate)DateTime.Now.AddMinutes(50);
-                newEvent.Title = "Get outside and do some exercise!";
-                newEvent.Notes = "This is your motivational event to go and do 30 minutes of exercise. Super important. Do this.";
+                newEvent = EKEvent.FromStore(eventStore);
+              
 
                 newEvent.Calendar = eKCalendar;
                 

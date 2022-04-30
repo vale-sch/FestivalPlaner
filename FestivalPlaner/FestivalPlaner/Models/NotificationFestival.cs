@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Xamarin.Forms;
-using FestivalPlaner.Models;
+using FestivalPlaner.Messages;
 using FestivalPlaner.ViewModels;
 using FestivalPlaner.Views;
 using System.Threading.Tasks;
@@ -39,8 +39,14 @@ namespace FestivalPlaner.Models
             {
                 GeoLocationService.nearFestivals.Remove(this);
                 await Shell.Current.GoToAsync($"{nameof(ItemDetailPage)}?{nameof(ItemDetailViewModel.ItemId)}={this.Festival._id}");
+                Device.BeginInvokeOnMainThread(() =>
+                {
+                    var calendarMessage = new CalendarMessage(this.Festival.startDate, this.Festival.endDate, this.Festival.name, this.Festival.place);
+                    MessagingCenter.Send(calendarMessage, "new CalendarEvent");
+                });
                 NotificationCenter.Current.NotificationTapped -= this.OnLocalNotificationTapped;
                 GeoLocationService.notificationIncrement--;
+
             }
         }
     }
