@@ -83,6 +83,7 @@ namespace FestivalPlaner.Services
                             };
                             var tempNearFestival = new NotificationFestival(festivalModel, notification);
                             nearFestivals.Add(tempNearFestival);
+
                         }
                     }
                 }

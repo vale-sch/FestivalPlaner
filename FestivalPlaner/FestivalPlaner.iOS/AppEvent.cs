@@ -40,7 +40,7 @@ namespace FestivalPlaner.iOS
     {
         if (granted)
         {
-            new CalendarService();
+         //   new CalendarService();
         }
         //do something here
         else

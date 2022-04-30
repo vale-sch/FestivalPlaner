@@ -42,7 +42,7 @@ namespace FestivalPlaner.Models
                 Device.BeginInvokeOnMainThread(() =>
                 {
                     var calendarMessage = new CalendarMessage(this.Festival.startDate, this.Festival.endDate, this.Festival.name, this.Festival.place);
-                    MessagingCenter.Send(calendarMessage, "new CalendarEvent");
+                    MessagingCenter.Send(calendarMessage, "CreateCalendar");
                 });
                 NotificationCenter.Current.NotificationTapped -= this.OnLocalNotificationTapped;
                 GeoLocationService.notificationIncrement--;
