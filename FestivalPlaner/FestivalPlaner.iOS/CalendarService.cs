@@ -14,6 +14,8 @@ namespace FestivalPlaner.iOS
     {
         private EKEventStore eventStore = AppEvent.CurrentEvent.EventStore;
         private EKCalendar eKCalendar = null;
+        private DateTime startTime;
+        private DateTime endTime;
         public EKEvent newEvent;
         public CalendarService(DateTime _startTime, DateTime _endTime, string _title, string _description)
         {
@@ -27,6 +29,8 @@ namespace FestivalPlaner.iOS
                 newEvent.Title = _title;
                 newEvent.Notes = _description;
             });
+            startTime = _startTime;
+            endTime = _endTime;
             CreateEvent();
         }
 
@@ -44,9 +48,10 @@ namespace FestivalPlaner.iOS
             Device.BeginInvokeOnMainThread(() =>
             {
                 newEvent.Calendar = eKCalendar;
-                var calendarEvents = eventStore.GetCalendarItems(eKCalendar.CalendarIdentifier);
-               // NSError e;
-               // eventStore.SaveEvent(newEvent, EKSpan.ThisEvent, out e);
+                var possibleEvent = eventStore.EventsMatching(eventStore.PredicateForCompleteReminders((NSDate)startTime, (NSDate)endTime, calendars));  
+                Console.WriteLine(possibleEvent);
+                // NSError e;
+                // eventStore.SaveEvent(newEvent, EKSpan.ThisEvent, out e);
             });
 
         }
