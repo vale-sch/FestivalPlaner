@@ -44,9 +44,9 @@ namespace FestivalPlaner.iOS
             Device.BeginInvokeOnMainThread(() =>
             {
                 newEvent.Calendar = eKCalendar;
-
-                NSError e;
-                eventStore.SaveEvent(newEvent, EKSpan.ThisEvent, out e);
+                var calendarEvents = eventStore.GetCalendarItems(eKCalendar.CalendarIdentifier);
+               // NSError e;
+               // eventStore.SaveEvent(newEvent, EKSpan.ThisEvent, out e);
             });
 
         }
