@@ -25,7 +25,8 @@ namespace FestivalPlaner.Services
         readonly static bool stopping = false;
         public static async Task Run(CancellationToken token)
         {
-            await Task.Run(async () => {
+            await Task.Run(async () =>
+            {
                 while (!stopping)
                 {
                     token.ThrowIfCancellationRequested();
@@ -71,19 +72,25 @@ namespace FestivalPlaner.Services
                             if (nearFestival.Festival == festivalModel) newNearFestival = false;
                         if (newNearFestival)
                         {
-                            var rndVerficationNumber = new Random().Next();
-                            notificationIncrement++;
-                            var notification = new NotificationRequest
-                            {
-                                BadgeNumber = notificationIncrement,
-                                Title = "Festival at your location!",
-                                Subtitle = festivalModel.name + "\n" + festivalModel.place,
-                                Description = "Entfernung: " + nearestLocationFestival + " km",
-                                NotificationId = rndVerficationNumber
-                            };
-                            var tempNearFestival = new NotificationFestival(festivalModel, notification);
-                            nearFestivals.Add(tempNearFestival);
+                            var dateCheckerMessage = new DateCheckerMessage(festivalModel.startDate, festivalModel.endDate);
 
+
+                            MessagingCenter.Send(dateCheckerMessage, "DateCheckerMessage");
+                            if (dateCheckerMessage.isFree)
+                            {
+                                var rndVerficationNumber = new Random().Next();
+                                notificationIncrement++;
+                                var notification = new NotificationRequest
+                                {
+                                    BadgeNumber = notificationIncrement,
+                                    Title = "Festival at your location!",
+                                    Subtitle = festivalModel.name + "\n" + festivalModel.place,
+                                    Description = "Entfernung: " + nearestLocationFestival + " km",
+                                    NotificationId = rndVerficationNumber
+                                };
+                                var tempNearFestival = new NotificationFestival(festivalModel, notification);
+                                nearFestivals.Add(tempNearFestival);
+                            }
                         }
                     }
                 }

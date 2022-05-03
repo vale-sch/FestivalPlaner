@@ -63,6 +63,10 @@ namespace FestivalPlaner.iOS
             {
                 new CalendarService(message.startTime, message.endTime, message.title, message.description);
             });
+            MessagingCenter.Subscribe<DateCheckerMessage>(this, "DateCheckerMessage", message =>
+            {
+                message.isFree = CalendarService.CheckIsDateIsAvailable(message.startTime, message.endTime);
+            });
         }
     }
 }
