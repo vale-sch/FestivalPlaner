@@ -47,11 +47,24 @@ namespace FestivalPlaner.iOS
             }
             Device.BeginInvokeOnMainThread(() =>
             {
-                newEvent.Calendar = eKCalendar;
-                var possibleEvent = eventStore.EventsMatching(eventStore.PredicateForCompleteReminders((NSDate)startTime, (NSDate)endTime, calendars));  
-                Console.WriteLine(possibleEvent);
-                // NSError e;
-                // eventStore.SaveEvent(newEvent, EKSpan.ThisEvent, out e);
+                var predicate = eventStore.PredicateForCompleteReminders((NSDate)startTime, (NSDate)endTime, calendars);
+                EKEventAvailability eKEventAvailability = EKEventAvailability.Free;
+                var possibleEvent = eventStore.EventsMatching(predicate);  
+                foreach(EKEvent ev in possibleEvent.ToArray())
+                {
+                    if(ev.Calendar == eKCalendar)
+                    {
+                        eKEventAvailability = ev.Availability;
+                    }
+                }
+                if(eKEventAvailability == EKEventAvailability.Free)
+                {
+                    newEvent.Calendar = eKCalendar;
+
+                    NSError e;
+                    eventStore.SaveEvent(newEvent, EKSpan.ThisEvent, out e);
+                }
+                
             });
 
         }
