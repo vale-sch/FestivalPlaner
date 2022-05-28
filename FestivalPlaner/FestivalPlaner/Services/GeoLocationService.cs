@@ -32,7 +32,7 @@ namespace FestivalPlaner.Services
                     token.ThrowIfCancellationRequested();
                     try
                     {
-                        await Task.Delay(TimeSpan.FromHours(2));
+                        await Task.Delay(TimeSpan.FromMinutes(2));
                         await GeoLocationService.GetCurrentLocation();
                         if (GeoLocationService.actualLocation != null)
                         {
@@ -76,6 +76,8 @@ namespace FestivalPlaner.Services
 
 
                             MessagingCenter.Send(dateCheckerMessage, "DateCheckerMessage");
+                            await Task.Delay(TimeSpan.FromSeconds(1));
+
                             if (dateCheckerMessage.isFree)
                             {
                                 var rndVerficationNumber = new Random().Next();

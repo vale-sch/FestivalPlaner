@@ -59,6 +59,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BootBroadcastReceiver.cs" />
+    <Compile Include="CalendarService.cs" />
     <Compile Include="Helpers\INotification.cs" />
     <Compile Include="Helpers\NotificationHelper.cs" />
     <Compile Include="LocationConsent.cs" />

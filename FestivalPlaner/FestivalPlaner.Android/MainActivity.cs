@@ -9,6 +9,8 @@ using Android.Content;
 using FestivalPlaner.Droid.Services;
 using Xamarin.Forms;
 using FestivalPlaner.Messages;
+using System.Threading.Tasks;
+
 
 namespace FestivalPlaner.Droid
 {
@@ -21,14 +23,22 @@ namespace FestivalPlaner.Droid
             Manifest.Permission.AccessCoarseLocation,
             Manifest.Permission.AccessFineLocation
         };
+        readonly string[] CalendarPermissions =
+      {
+            Manifest.Permission.ReadCalendar,
+            Manifest.Permission.WriteCalendar
+        };
         Intent serviceIntent;
+
         private const int RequestCode = 5469;
+
         protected override void OnStart()
         {
+
             base.OnStart();
-            if((int) Build.VERSION.SdkInt >= 23)
+            if ((int)Build.VERSION.SdkInt >= 23)
             {
-                if(CheckSelfPermission(Manifest.Permission.AccessFineLocation) != Permission.Granted)
+                if (CheckSelfPermission(Manifest.Permission.AccessFineLocation) != Permission.Granted)
                 {
                     RequestPermissions(LocationPermissions, RequestedLocationId);
                 }
@@ -36,9 +46,10 @@ namespace FestivalPlaner.Droid
                 {
                     // Permission already granted
                 }
-            }
-        }
 
+            }
+
+        }
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -48,12 +59,24 @@ namespace FestivalPlaner.Droid
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
 
             serviceIntent = new Intent(this, typeof(AndroidLocationService));
+
             SetServiceMethods();
 
             Xamarin.FormsMaps.Init(this, savedInstanceState);
             NotificationCenter.NotifyNotificationTapped(Intent);
+            if (CheckSelfPermission(Manifest.Permission.ReadCalendar) != Permission.Granted)
+            {
+                RequestPermissions(CalendarPermissions, 1);
+            }
+            else
+            {
+                // Permission already granted
+            }
             LoadApplication(new App());
+         
         }
+     
+
         protected override void OnNewIntent(Intent intent)
         {
             NotificationCenter.NotifyNotificationTapped(intent);
@@ -62,9 +85,9 @@ namespace FestivalPlaner.Droid
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)
         {
 
-            if(requestCode == RequestedLocationId)
+            if (requestCode == RequestedLocationId)
             {
-                if((grantResults.Length == 1) && grantResults[0] == Permission.Granted)
+                if ((grantResults.Length == 1) && grantResults[0] == Permission.Granted)
                 {
                     //permission granted
                 }
@@ -78,13 +101,16 @@ namespace FestivalPlaner.Droid
             {
                 Xamarin.Essentials.Platform.OnRequestPermissionsResult(requestCode, permissions, grantResults);
             }
-            
+
 
             base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
         }
-          void SetServiceMethods()
+
+        [Obsolete]
+        void SetServiceMethods()
         {
-            MessagingCenter.Subscribe<StartServiceMessage>(this, "ServiceStarted", message => {
+            MessagingCenter.Subscribe<StartServiceMessage>(this, "ServiceStarted", message =>
+            {
                 if (!IsServiceRunning(typeof(AndroidLocationService)))
                 {
                     if (Android.OS.Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.O)
@@ -98,12 +124,25 @@ namespace FestivalPlaner.Droid
                 }
             });
 
-            MessagingCenter.Subscribe<StopServiceMessage>(this, "ServiceStopped", message => {
+            MessagingCenter.Subscribe<StopServiceMessage>(this, "ServiceStopped", message =>
+            {
                 if (IsServiceRunning(typeof(AndroidLocationService)))
                     StopService(serviceIntent);
             });
+            MessagingCenter.Subscribe<CalendarMessage>(this, "CreateCalendar", message =>
+            {
+                new CalendarService(message.startTime, message.endTime, message.title, message.description);
+            });
+            MessagingCenter.Subscribe<DateCheckerMessage>(this, "DateCheckerMessage", message =>
+            {
+                Task.Run(async () =>
+                {
+                    message.isFree =  await CalendarService.CheckIsDateIsAvailable(message.startTime, message.endTime); 
+                });
+            });
         }
 
+        [Obsolete]
         private bool IsServiceRunning(System.Type cls)
         {
             ActivityManager manager = (ActivityManager)GetSystemService(Context.ActivityService);
