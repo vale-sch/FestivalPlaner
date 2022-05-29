@@ -19,18 +19,13 @@ namespace FestivalPlaner.ViewModels
 
         public NewItemViewModel()
         {
-            Save = new Command(OnSave, ValidateSave);
+            Save = new Command(OnSave);
             Cancel = new Command(OnCancel);
             this.PropertyChanged +=
                 (_, __) => Save.ChangeCanExecute();
         }
 
-        private bool ValidateSave()
-        {
-            return true;
-            //return !String.IsNullOrWhiteSpace(text)
-            //  && !String.IsNullOrWhiteSpace(description);
-        }
+
 
         public Double Latitude
         {

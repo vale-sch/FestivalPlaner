@@ -11,20 +11,23 @@
     Size =" 350, 700"
     
     >
-    
-    
-    <StackLayout>
-        <Label Text="Set your festival location" HorizontalTextAlignment="Center"  VerticalTextAlignment="Center" FontSize="Large"></Label>
-        <Frame>
-            
+    <Grid HorizontalOptions="FillAndExpand"
+                VerticalOptions="FillAndExpand">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        
+
+        <StackLayout Grid.Row="1">
             <maps:Map
                 x:Name="Map"
-                HeightRequest="550"
-                WidthRequest="400"
                 MapClicked="Map_MapClicked"
                 IsShowingUser="True">
             </maps:Map>
-        </Frame>
+            
+        </StackLayout>
         <Button Text=" Close maps" Clicked="Button_Clicked"/>
-    </StackLayout>
+      
+    </Grid>
 </xct:Popup>

@@ -23,8 +23,8 @@ namespace FestivalPlaner.Views
         {
             InitializeComponent();
             newItemPage = _newItemPage;
-
-            Map.MoveToRegion(MapSpan.FromCenterAndRadius(new Position(GeoLocationService.actualLocation.Latitude, GeoLocationService.actualLocation.Longitude), Distance.FromKilometers(1)));
+            if (FestivalPlaner.gpsToggle)
+                Map.MoveToRegion(MapSpan.FromCenterAndRadius(new Position(GeoLocationService.actualLocation.Latitude, GeoLocationService.actualLocation.Longitude), Distance.FromKilometers(1)));
         }
 
 

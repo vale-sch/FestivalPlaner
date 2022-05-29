@@ -20,6 +20,9 @@
     <Compile Update="Views\FestivalPlaner.xaml.cs">
       <DependentUpon>FestivalPlaner.xaml</DependentUpon>
     </Compile>
+    <Compile Update="Views\FestivalMap.xaml.cs">
+      <DependentUpon>FestivalMap.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>

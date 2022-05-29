@@ -84,10 +84,12 @@
     <FlyoutItem Title="Browse Festivals" Icon="icon_feed.png">
         <ShellContent Route="ItemsPage" ContentTemplate="{DataTemplate local:ItemsPage}" />
     </FlyoutItem>
-
+    <FlyoutItem Title="Festival Map" Icon="location.png">
+       
+        <ShellContent Route="FestivalMap" ContentTemplate="{DataTemplate local:FestivalMap}" />
+    </FlyoutItem>
     <!-- When the Flyout is visible this will be a menu item you can tie a click behavior to  -->
-    <MenuItem Text="Logout" StyleClass="MenuItemLayoutStyle" Clicked="OnMenuItemClicked">
-    </MenuItem>
+ 
 
     <!--
         TabBar lets you define content that won't show up in a flyout menu. When this content is active
@@ -96,9 +98,7 @@
         content you can do so by calling 
         await Shell.Current.GoToAsync("//LoginPage");
     -->
-    <TabBar>
-        <ShellContent Route="LoginPage" ContentTemplate="{DataTemplate local:LoginPage}" />
-    </TabBar>
+   
 
     <!-- Optional Templates 
     // These may be provided inline as below or as separate classes.

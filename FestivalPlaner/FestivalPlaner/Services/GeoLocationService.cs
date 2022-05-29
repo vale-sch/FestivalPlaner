@@ -22,17 +22,17 @@ namespace FestivalPlaner.Services
         public static CancellationTokenSource cts;
         public static Location actualLocation;
         public static bool newNearFestival = false;
-        readonly static bool stopping = false;
         public static async Task Run(CancellationToken token)
         {
             await Task.Run(async () =>
             {
-                while (!stopping)
+                while (Views.FestivalPlaner.gpsToggle)
                 {
                     token.ThrowIfCancellationRequested();
                     try
                     {
-                        await Task.Delay(TimeSpan.FromMinutes(2));
+
+                        await Task.Delay(TimeSpan.FromHours(Views.FestivalPlaner.gpsSearchIntervall));
                         await GeoLocationService.GetCurrentLocation();
                         if (GeoLocationService.actualLocation != null)
                         {
@@ -65,7 +65,7 @@ namespace FestivalPlaner.Services
                 foreach (FestivalModel festivalModel in App.festivals)
                 {
                     double nearestLocationFestival = Location.CalculateDistance(actualLocation, new Location(festivalModel.latitude, festivalModel.longitude), DistanceUnits.Kilometers);
-                    if (nearestLocationFestival < 5)
+                    if (nearestLocationFestival < Views.FestivalPlaner.gpsSearchRadius)
                     {
                         newNearFestival = true;
                         foreach (NotificationFestival nearFestival in nearFestivals.ToArray())
@@ -73,12 +73,30 @@ namespace FestivalPlaner.Services
                         if (newNearFestival)
                         {
                             var dateCheckerMessage = new DateCheckerMessage(festivalModel.startDate, festivalModel.endDate);
+                            if (Views.FestivalPlaner.calendarToggle)
+                            {
+                                
+                                MessagingCenter.Send(dateCheckerMessage, "DateCheckerMessage");
+                                await Task.Delay(TimeSpan.FromSeconds(1));
+                            }
 
+                            if (!Views.FestivalPlaner.calendarToggle)
+                            {
+                                var rndVerficationNumber = new Random().Next();
+                                notificationIncrement++;
+                                var notification = new NotificationRequest
+                                {
+                                    BadgeNumber = notificationIncrement,
+                                    Title = "Festival at your location!",
+                                    Subtitle = festivalModel.name + "\n" + festivalModel.place,
+                                    Description = "Entfernung: " + nearestLocationFestival + " km",
+                                    NotificationId = rndVerficationNumber
+                                };
+                                var tempNearFestival = new NotificationFestival(festivalModel, notification);
+                                nearFestivals.Add(tempNearFestival);
+                            }
 
-                            MessagingCenter.Send(dateCheckerMessage, "DateCheckerMessage");
-                            await Task.Delay(TimeSpan.FromSeconds(1));
-
-                            if (dateCheckerMessage.isFree)
+                            else if (dateCheckerMessage.isFree)
                             {
                                 var rndVerficationNumber = new Random().Next();
                                 notificationIncrement++;

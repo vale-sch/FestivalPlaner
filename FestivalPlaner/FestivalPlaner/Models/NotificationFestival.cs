@@ -34,16 +34,17 @@ namespace FestivalPlaner.Models
         }
         private async void OnLocalNotificationTapped(NotificationEventArgs e)
         {
-           
+
             if (this.NotificationRequest.NotificationId == e.Request.NotificationId)
             {
                 GeoLocationService.nearFestivals.Remove(this);
                 await Shell.Current.GoToAsync($"{nameof(ItemDetailPage)}?{nameof(ItemDetailViewModel.ItemId)}={this.Festival._id}");
-                Device.BeginInvokeOnMainThread(() =>
-                {
-                    var calendarMessage = new CalendarMessage(this.Festival.startDate, this.Festival.endDate, this.Festival.name, this.Festival.place);
-                    MessagingCenter.Send(calendarMessage, "CreateCalendar");
-                });
+                if (Views.FestivalPlaner.calendarToggle)
+                    Device.BeginInvokeOnMainThread(() =>
+                    {
+                        var calendarMessage = new CalendarMessage(this.Festival.startDate, this.Festival.endDate, this.Festival.name, this.Festival.place);
+                        MessagingCenter.Send(calendarMessage, "CreateCalendar");
+                    });
                 NotificationCenter.Current.NotificationTapped -= this.OnLocalNotificationTapped;
                 GeoLocationService.notificationIncrement--;
 
