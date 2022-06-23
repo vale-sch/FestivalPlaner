@@ -1,4 +1,5 @@
 ﻿using FestivalPlaner.Models;
+using FestivalPlaner.Services;
 using FestivalPlaner.Views;
 using System;
 using System.Collections.ObjectModel;
@@ -32,6 +33,9 @@ namespace FestivalPlaner.ViewModels
 
             try
             {
+                if (!GeoLocationService.isCeckingDatabase)
+                    await App.LoadFestivalsFromDB();
+
                 Festivals.Clear();
 
                 foreach (FestivalModel festivalModel in App.festivals)

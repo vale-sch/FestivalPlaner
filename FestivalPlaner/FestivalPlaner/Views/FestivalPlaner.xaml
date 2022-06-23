@@ -21,7 +21,6 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <Label FontSize="Title" FontFamily="Lobster-Regular" HorizontalOptions="Center" >Festival Planer</Label>
         <Image Source="colorBlob.png" VerticalOptions="Center" Aspect="AspectFit" InputTransparent="True" />
         <ScrollView Grid.Row="1">
             <StackLayout Orientation="Vertical" Padding="15,12,15,12" Spacing="8">
@@ -29,9 +28,9 @@
                 <Label>Use GPS functionality</Label>
                 <Switch x:Name="gpsBool" IsToggled="True" Toggled="gpsBool_Toggled"></Switch>
                 <Label>Searching Radius in Kilometres</Label>
-                <Entry x:Name="searchRadius" Text="5" Completed="searchRadius_Completed"/>
-                <Label>Search Intervall in Hours</Label>
-                <Entry x:Name="searchInterval" Text="0.01" Completed="searchInterval_Completed"/>
+                <Entry x:Name="searchRadius" Text="500" Completed="searchRadius_Completed"/>
+                <Label>Search Intervall in Minutes</Label>
+                <Entry x:Name="searchInterval" Text="1" Completed="searchInterval_Completed"/>
                 <Label>Use Calendar functionality</Label>
                 <Switch x:Name="calendarBool" IsToggled="True" Toggled="calendarBool_Toggled"></Switch>
 

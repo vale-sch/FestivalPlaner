@@ -17,6 +17,8 @@ namespace FestivalPlaner.Views
     {
         public FestivalMap()
         {
+            Title = "Festival Map";
+
             InitializeComponent();
             
             if (FestivalPlaner.gpsToggle && GeoLocationService.actualLocation.Latitude != 0)

@@ -14,11 +14,12 @@ namespace FestivalPlaner.Views
         public static FestivalPlaner Instance { get; private set; }
         public static bool calendarToggle = true;
         public static bool gpsToggle = true;
-        public static int gpsSearchRadius = 5;
-        public static float gpsSearchIntervall = 0.01f;
+        public static int gpsSearchRadius = 500;
+        public static float gpsSearchIntervall = 1f;
         public FestivalPlaner()
         {
             InitializeComponent();
+            Title = "Festival Planer";
         }
 
         private void calendarBool_Toggled(object sender, ToggledEventArgs e)

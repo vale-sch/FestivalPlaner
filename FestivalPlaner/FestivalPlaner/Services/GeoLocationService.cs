@@ -22,6 +22,7 @@ namespace FestivalPlaner.Services
         public static CancellationTokenSource cts;
         public static Location actualLocation;
         public static bool newNearFestival = false;
+        public static bool isCeckingDatabase = false;
         public static async Task Run(CancellationToken token)
         {
             await Task.Run(async () =>
@@ -32,7 +33,7 @@ namespace FestivalPlaner.Services
                     try
                     {
 
-                        await Task.Delay(TimeSpan.FromHours(Views.FestivalPlaner.gpsSearchIntervall));
+                        await Task.Delay(TimeSpan.FromMinutes(Views.FestivalPlaner.gpsSearchIntervall));
                         await GeoLocationService.GetCurrentLocation();
                         if (GeoLocationService.actualLocation != null)
                         {
@@ -62,6 +63,7 @@ namespace FestivalPlaner.Services
                 var request = new GeolocationRequest(GeolocationAccuracy.High, TimeSpan.FromSeconds(45));
                 cts = new CancellationTokenSource();
                 actualLocation = await Geolocation.GetLocationAsync(request, cts.Token);
+                isCeckingDatabase = true;
                 foreach (FestivalModel festivalModel in App.festivals)
                 {
                     double nearestLocationFestival = Location.CalculateDistance(actualLocation, new Location(festivalModel.latitude, festivalModel.longitude), DistanceUnits.Kilometers);
@@ -75,7 +77,7 @@ namespace FestivalPlaner.Services
                             var dateCheckerMessage = new DateCheckerMessage(festivalModel.startDate, festivalModel.endDate);
                             if (Views.FestivalPlaner.calendarToggle)
                             {
-                                
+
                                 MessagingCenter.Send(dateCheckerMessage, "DateCheckerMessage");
                                 await Task.Delay(TimeSpan.FromSeconds(1));
                             }
@@ -114,6 +116,7 @@ namespace FestivalPlaner.Services
                         }
                     }
                 }
+                isCeckingDatabase = false;
             }
             catch (FeatureNotSupportedException fnsEx)
             {
